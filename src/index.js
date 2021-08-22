@@ -1,12 +1,11 @@
 import './sass/main.scss';
+
+import ImagesApiService from './js/gallery-service';
 import imagesTpl from './templates/galleryList.hbs';
 // console.log(imagesTpl);
 
 // import API from './js/apiService';
 // console.log(API);
-
-import ImagesApiService from './js/gallery-service';
-import { declareFunction } from 'babel-types';
 
 const refs = {
   searchForm: document.getElementById('search-form'),
@@ -18,6 +17,7 @@ const refs = {
 const imagesApiService = new ImagesApiService();
 // console.log(imagesApiService);
 
+refs.loadMoreBtn.setAttribute('disabled', true);
 refs.searchForm.addEventListener('submit', onSearch);
 refs.loadMoreBtn.addEventListener('click', onLoadMore);
 
@@ -30,6 +30,7 @@ function onSearch(event) {
 
   imagesApiService.resetPage();
   imagesApiService.fetchImages().then(appendImagesMarkup);
+  refs.loadMoreBtn.removeAttribute('disabled');
 }
 
 function onLoadMore() {

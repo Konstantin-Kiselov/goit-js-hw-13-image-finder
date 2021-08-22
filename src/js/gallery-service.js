@@ -19,10 +19,10 @@ export default class ImagesApiService {
 
     return fetch(url)
       .then(response => response.json())
-      .then(data => {
+      .then(({ hits }) => {
         this.incrementPage();
-        // console.log(data);
-        return data.hits;
+        // console.log(hits);
+        return hits;
       });
     //   .then(({ images }) => {
     //     // this.incrementPage();
