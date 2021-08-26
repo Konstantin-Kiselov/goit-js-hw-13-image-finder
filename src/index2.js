@@ -24,13 +24,27 @@ refs.loadMoreBtn.addEventListener('click', onLoadMore);
 function onSearch(event) {
   event.preventDefault();
 
-  clearImagesContainer();
   imagesApiService.query = event.currentTarget.elements.query.value;
   //   console.log(imagesApiService.query);
+  if (imagesApiService.query.trim() === '') {
+    console.log('Введите что-то нормальное :)');
+    resetSearchForm();
+    return;
+  }
 
+  clearImagesContainer();
   imagesApiService.resetPage();
-  imagesApiService.fetchImages().then(appendImagesMarkup);
-  refs.loadMoreBtn.removeAttribute('disabled');
+  imagesApiService.fetchImages().then(images => {
+    if (images.length === 0) {
+      console.log('Введите что-то нормальное :)');
+      resetSearchForm();
+      return;
+    }
+
+    appendImagesMarkup(images);
+    resetSearchForm();
+    refs.loadMoreBtn.removeAttribute('disabled');
+  });
 }
 
 function onLoadMore() {
@@ -38,6 +52,10 @@ function onLoadMore() {
   imagesApiService.fetchImages().then(images => {
     appendImagesMarkup(images);
     scroll();
+    // console.log(images.length);
+    if (images.length < 12) {
+      refs.loadMoreBtn.setAttribute('disabled', true);
+    }
   });
 }
 
@@ -54,4 +72,8 @@ function scroll() {
     behavior: 'smooth',
     block: 'end',
   });
+}
+
+function resetSearchForm() {
+  refs.searchForm.elements.query.value = '';
 }
